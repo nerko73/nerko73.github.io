@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Worker Administration</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+	<!-- Bootstrap stylesheet -->
+	<link rel="stylesheet" href="bootstrap/css/bootstrap.css">
+
+	<link rel="stylesheet" type="text/css" href="styles/admin-style.css">
+
+</head>
+<body>
+	<div id="navBar">
+		<h2 id="h2" class="d-inline h2">
+			Worker Administration
+		</h2>
+		<input class="btn float-right" type="submit" id="btnLogout" value="Log out">
+	</div>
+	<div table-responsive>
+	<table id="mainTable" class="table table-hover table-condensed">
+		<thead>
+			<tr class="w-100 text-center">
+				<th>
+					Name
+				</th>
+				<th>
+					Last name
+				</th>
+				<th>
+					Birth date
+				</th>
+				<th>
+					Qualifications
+				</th>
+				<th>
+					Previous employers
+				</th>
+				<th >
+					Add/Edit
+				</th>
+			</tr>
+		</thead>
+		<tbody>
+			
+			<tr>
+				<td>
+					<input id="txtName" class="form-control">
+				</td>
+				<td>
+					<input id="txtLastName" class="form-control">
+				</td>
+				<td>
+					<input id="txtDate" class="form-control">
+				</td>
+				<td>
+					<input id="txtQual" class="form-control">
+				</td>
+				<td>
+					<input id="txtEmp" class="form-control">
+				</td>
+				<td id="iconCell">
+					<div class="d-table">
+						<div class="d-table-cell">
+							<img src="icons/add.png" id="imgAdd">
+						</div>
+						<div id="imgOkDiv"class="d-table">
+							
+						</div>
+					</div>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+
+
+	<!-- jquery javascript -->
+	<script src="scripts/jquery.js"></script>
+	
+	<!-- Bootstrap javascript-->
+	<script src="bootstrap/js/bootstrap.bundle.min.js"></script>
+
+	<!-- The core Firebase JS SDK is always required and must be listed first -->
+	<script src="https://www.gstatic.com/firebasejs/6.3.0/firebase-app.js"></script>
+	
+	<!-- Firebase authentication -->
+	<script src="https://www.gstatic.com/firebasejs/6.3.0/firebase-auth.js"></script>
+
+	<!-- Firebase database -->
+	<script src="https://www.gstatic.com/firebasejs/6.3.0/firebase-database.js"></script>
+
+	<script>document.domain = document.domain</script>
+
+	<script>var exports = {};</script>
+	<script type="text/javascript" src="scripts/admin-ts.js"></script>
+</div>
+</body>
+</html>

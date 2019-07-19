@@ -1,0 +1,6 @@
+#mainForm{
+	margin: 200px auto;
+}
+#txtPass, #txtEmail{
+	margin: 0 auto 10px auto;
+}
