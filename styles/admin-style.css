@@ -5,3 +5,9 @@ table{
 	
 	padding: 20px;
 }
+.d-table{
+	margin: 0 auto;
+}
+#btnAddWorker{
+	margin-right: 10px;
+}
