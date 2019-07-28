@@ -27,6 +27,7 @@ var indexDB, indexTx, addStore, employerStore, empRemoveStore, removeStore, work
 // Creating a new database or upgrading an existing one
 indexRequest.onupgradeneeded = function (e) {
     console.log("upgrade");
+    console.log(e.oldVersion);
     indexDB = indexRequest.result;
     if (e.oldVersion < 1) {
         // Store for worker data
@@ -217,6 +218,7 @@ function deleteRecord(e) {
     insertRows();
 }
 function editRecord(e) {
+	addEditTable.classList.remove("d-none");
     // Sets dataElement to the previous <td> element in the same row in which the edit icon is located
     var dataElement = e.target.parentElement.parentElement.parentElement.previousElementSibling;
     // Moves through the row and sets the input fields to the corresponding data in the row

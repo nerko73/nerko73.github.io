@@ -277,7 +277,7 @@ function deleteRecord(e) {
 
 }
 function editRecord(e) {
-      	
+    addEditTable.classList.remove("d-none");
    	// Sets dataElement to the previous <td> element in the same row in which the edit icon is located
    	var dataElement = e.target.parentElement.parentElement.parentElement.previousElementSibling;
  
