@@ -28,7 +28,7 @@ var indexDB, indexTx, addStore, employerStore, empRemoveStore, removeStore, work
 // Creating a new database or upgrading an existing one
 indexRequest.onupgradeneeded = function(e) {
 	console.log("upgrade");
-
+	indexDB = indexRequest.result;
 	if(e.oldVersion < 1){
 		// Store for worker data
 		workerStore = indexDB.createObjectStore("WorkerStore", {
