@@ -22,32 +22,37 @@ if (typeof firebase != 'undefined') {
     employersRef.once('value', updateEmployers);
 }
 // Open indexedDB database
-var indexRequest = indexedDB.open("WorkerDatabase", 5);
+var indexRequest = indexedDB.open("WorkerDatabase", 9);
 var indexDB, indexTx, addStore, employerStore, empRemoveStore, removeStore, workerStore;
 // Creating a new database or upgrading an existing one
 indexRequest.onupgradeneeded = function (e) {
     console.log("upgrade");
-    console.log(e.oldVersion);
     indexDB = indexRequest.result;
-    if (e.oldVersion < 1) {
+    if (!indexDB.objectStoreNames.contains("WorkerStore")) {
         // Store for worker data
         workerStore = indexDB.createObjectStore("WorkerStore", {
             keyPath: "id"
         });
+    }
+    if (!indexDB.objectStoreNames.contains("AddStore")) {
         // Store used for syncing with firebase upon reastablishing connection
         addStore = indexDB.createObjectStore("AddStore", {
             keyPath: "id"
         });
+    }
+    if (!indexDB.objectStoreNames.contains("RemoveStore")) {
         // Store used for syncing with firebase upon reastablishing connection
         removeStore = indexDB.createObjectStore("RemoveStore", {
             keyPath: "id"
         });
     }
-    if (e.oldVersion < 4) {
+    if (!indexDB.objectStoreNames.contains("EmployerStore")) {
         // Store used for employer data
         employerStore = indexDB.createObjectStore("EmployerStore", {
             keyPath: "id"
         });
+    }
+    if (!indexDB.objectStoreNames.contains("EmpRemoveStore")) {
         // Store used for syncing with firebase upon reastablishing connection
         empRemoveStore = indexDB.createObjectStore("EmpRemoveStore", {
             keyPath: "id"
@@ -218,7 +223,7 @@ function deleteRecord(e) {
     insertRows();
 }
 function editRecord(e) {
-	addEditTable.classList.remove("d-none");
+    addEditTable.classList.remove("d-none");
     // Sets dataElement to the previous <td> element in the same row in which the edit icon is located
     var dataElement = e.target.parentElement.parentElement.parentElement.previousElementSibling;
     // Moves through the row and sets the input fields to the corresponding data in the row
