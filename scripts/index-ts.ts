@@ -24,6 +24,7 @@ import * as firebase from 'firebase';
 	  const txtPass = <HTMLInputElement>document.getElementById("txtPass");
 	  const btnLogin = document.getElementById("btnLogin");
 	  const btnRegister = document.getElementById("btnRegister");
+	  const errorMsg = document.getElementById("errorMsg");
 	  
 	  // Login event
 	  btnLogin.addEventListener('click', e => {
@@ -32,7 +33,7 @@ import * as firebase from 'firebase';
 	  	const pass = txtPass.value;
 	  	const auth = firebase.auth();
 	  	const promise = auth.signInWithEmailAndPassword(email, pass);
-	  	promise.catch(e => console.log(e.message));
+	  	promise.catch(e => errorMsg.innerHTML = e.message);
 	  });
 
 	  // Register event
@@ -42,7 +43,7 @@ import * as firebase from 'firebase';
 	  	const pass = txtPass.value;
 	  	const auth = firebase.auth();
 	  	const promise = auth.createUserWithEmailAndPassword(email, pass);
-	  	promise.catch(e => console.log(e.message));
+	  	promise.catch(e => errorMsg.innerHTML = e.message);
 	  });
 
 	  // Event fires when user logs in or out

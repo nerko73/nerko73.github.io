@@ -1,7 +1,5 @@
 "use strict";
 exports.__esModule = true;
-// Import firebase delete after transpiling to javascript
-// It is already included in another <script> tag
 
 // Your web app's Firebase configuration
 var firebaseConfig = {
@@ -22,6 +20,7 @@ if (typeof firebase != 'undefined') {
     var txtPass_1 = document.getElementById("txtPass");
     var btnLogin = document.getElementById("btnLogin");
     var btnRegister = document.getElementById("btnRegister");
+    var errorMsg_1 = document.getElementById("errorMsg");
     // Login event
     btnLogin.addEventListener('click', function (e) {
         console.log("login");
@@ -29,7 +28,7 @@ if (typeof firebase != 'undefined') {
         var pass = txtPass_1.value;
         var auth = firebase.auth();
         var promise = auth.signInWithEmailAndPassword(email, pass);
-        promise["catch"](function (e) { return console.log(e.message); });
+        promise["catch"](function (e) { return errorMsg_1.innerHTML = e.message; });
     });
     // Register event
     btnRegister.addEventListener('click', function (e) {
@@ -38,7 +37,7 @@ if (typeof firebase != 'undefined') {
         var pass = txtPass_1.value;
         var auth = firebase.auth();
         var promise = auth.createUserWithEmailAndPassword(email, pass);
-        promise["catch"](function (e) { return console.log(e.message); });
+        promise["catch"](function (e) { return errorMsg_1.innerHTML = e.message; });
     });
     // Event fires when user logs in or out
     firebase.auth().onAuthStateChanged(function (firebaseUser) {
