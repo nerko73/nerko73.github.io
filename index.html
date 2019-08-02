@@ -13,28 +13,54 @@
 	<title>Worker Administration</title>
 </head>
 <body>
+	<div class="verticalLine"></div>
 	<div class="container">
-	<div id="mainForm" class="form-group">
-		<div class="row">
-			
-			<div class="col text-center">
-				<input id="txtEmail" class="form-control w-50" type="text" placeholder="E-mail">
+		<div id="mainForm" class="form-group">
+			<div class="row">
+				<div id="info" class="col-6">
+					<h1>
+						Worker Administration
+					</h1>
+					<p>
+						Welcome to the place where all your worker administration needs are met.
+					</p>
+					<p>
+						To begin please log in or register using an e-mail and password of at least 6 characters. 
+					</p>
+				</div>
+				<div class="col-6">
+					<div class="row">
+						<div class="col text-center">
+							<h3 class="">
+								Log in or Register
+							</h3>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col text-center">
+							<input id="txtEmail" class="form-control w-75" type="text" placeholder="E-mail">
+						</div>
+					</div>
+					<div class="row">
+						<div class="col text-center">
+							<input id="txtPass" class="form-control d-block w-75" type="password" placeholder="Password">
+						</div>
+					</div>
+					<div class="row">
+						<div id="errorMsg" class="col text-center">
+							
+						</div>
+					</div>
+					<div class="row">
+						<div class="col text-center">
+							<input id="btnLogin" class="btn btn-primary" type="submit" value="Log in">
+							<input class="btn btn-secondary" type="submit" id="btnRegister" value="Register">
+						</div>
+					</div>
+					
+				</div>
 			</div>
-			
 		</div>
-		<div class="row">
-
-			<div class="col text-center">
-				<input id="txtPass" class="form-control w-50 d-block" type="password" placeholder="Password">
-			</div>
-		</div>
-		<div class="row">
-			<div class="col text-center">
-				<input id="btnLogin" class="btn btn-primary" type="submit" value="Log in">
-				<input class="btn btn-secondary" type="submit" id="btnRegister" value="Register">
-			</div>
-		</div>
-	</div>
 	</div>
 
 	<!-- jquery javascript -->
