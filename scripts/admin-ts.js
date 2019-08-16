@@ -1,7 +1,5 @@
 "use strict";
 exports.__esModule = true;
-// Import firebase delete after transpiling to javascript
-// It is already included in another <script> tag
 
 // Web app's Firebase configuration
 var firebaseConfig = {
@@ -65,6 +63,7 @@ indexRequest.onerror = function (e) {
 };
 //Event fires on successful opening of database 
 indexRequest.onsuccess = function (e) {
+    console.log("success");
     indexDB = indexRequest.result;
     indexDB.onerror = function (e) {
         console.log("Error:" + indexDB.error.code);
@@ -75,28 +74,11 @@ indexRequest.onsuccess = function (e) {
 var imgEdit = [];
 var imgDelete = [];
 var divEditDelete = [];
-// Arrays for storing img elements for employer edit and delete operations
-var imgEmpEdit = [];
-var imgEmpDelete = [];
-var divEmpEditDelete = [];
-var updateKey, empUpdateKey;
+var updateKey;
 // Get elements
 var mainTable = document.getElementById("mainTable");
-var txtName = document.getElementById("txtName");
-var txtLastName = document.getElementById("txtLastName");
-var txtDate = document.getElementById("txtDate");
-var txtQual = document.getElementById("txtQual");
-var addEditTable = document.getElementById("addEditTable");
-var txtEmpName = document.getElementById("txtEmpName");
-var txtLocation = document.getElementById("txtLocation");
-var txtStartDate = document.getElementById("txtStartDate");
-var txtEndDate = document.getElementById("txtEndDate");
 var btnLogout = document.getElementById("btnLogout");
 var btnAddWorker = document.getElementById("btnAddWorker");
-var imgAdd = document.getElementById("imgAdd");
-var imgOkDiv = document.getElementById("imgOkDiv");
-var imgEmpAdd = document.getElementById("imgEmpAdd");
-var imgEmpOkDiv = document.getElementById("imgEmpOkDiv");
 var workers;
 // Array for storing ids of workers
 var keys = [];
@@ -125,6 +107,7 @@ function insertRows() {
     // Event fires when worker data is successfully retrieved
     workerStoreRequest.onsuccess = function (e) {
         var localKeys = workerStoreRequest.result;
+        console.log(localKeys);
         // For every entry in database insert a row
         localKeys.forEach(function (key) {
             var empTx = indexDB.transaction("EmployerStore", "readwrite");
@@ -356,6 +339,8 @@ function updateWorkers(data) {
             }
         };
     });
+    // Refresh the rows with worker data
+    setTimeout(insertRows, 2000);
 }
 // Update local employer storage based od firebase
 function updateEmployers(data) {
@@ -385,7 +370,7 @@ function updateEmployers(data) {
             }
         };
     });
-    insertRows();
+    setTimeout(insertRows, 1000);
 }
 if (typeof firebase != 'undefined') {
     btnLogout.addEventListener('click', function (e) {

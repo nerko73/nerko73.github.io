@@ -1,6 +1,6 @@
-// Import firebase delete after transpiling to javascript
-// It is already included in another <script> tag
 import * as firebase from 'firebase';
+
+import * as moment from 'moment'
 
 // Your web app's Firebase configuration
 let firebaseConfig = {
@@ -184,8 +184,9 @@ function editEmployerRecord(e) {
 		alert("All fields must be filled!");
 		return;
 		}
-		if(!Date.parse(txtStartDate.value) || !Date.parse(txtEndDate.value)){
-			alert("Invalid date format!");
+		console.log(moment(txtStartDate.value, 'YYYY-M-D', true).isValid());
+		if(!moment(txtStartDate.value, 'YYYY-M-D', true).isValid() || !moment(txtEndDate.value, 'YYYY-M-D', true).isValid()){
+			alert("Invalid date format! Example: 2015-12-11");
 			return;
 		}
 
@@ -225,7 +226,7 @@ function deleteEmployerRecord(e) {
 	var choice = confirm("Do you with do delete worker?");
 
 	if(choice == false)	return;
-	
+
 	var dataElement = e.target.parentElement.parentElement.parentElement.parentElement;
 
 	var empDeleteKey = findEmpKey(dataElement);
@@ -339,8 +340,8 @@ imgEmpAdd.addEventListener('click', e => {
 		alert("All fields must be filled!");
 		return;
 	}
-	if(!Date.parse(txtStartDate.value) || !Date.parse(txtEndDate.value)){
-		alert("Invalid date format!");
+	if(!moment(txtStartDate.value, 'YYYY-M-D', true).isValid() || !moment(txtEndDate.value, 'YYYY-M-D', true).isValid()){
+		alert("Invalid date format! Example: 2015-12-11");
 		return;
 	}
 	empId.push("");
@@ -366,8 +367,8 @@ function addWorker() {
 		alert("All fields must be filled!");
 		return;
 	}
-	if(!Date.parse(txtWorkerBirthDay.value)){
-		alert("Invalid date format!");
+	if(!moment(txtWorkerBirthDay.value, 'YYYY-M-D', true).isValid()){
+		alert("Invalid date format! Example: 2015-12-11");
 		return;
 	}
 	if(updateKey == "" || updateKey == null){

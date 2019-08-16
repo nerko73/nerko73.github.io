@@ -67,6 +67,7 @@ indexRequest.onerror = function(e) {
 };
 //Event fires on successful opening of database 
 indexRequest.onsuccess = function(e){
+	console.log("success");
 	indexDB = indexRequest.result;
     indexDB.onerror = function(e){
     	console.log("Error:" + indexDB.error.code);
@@ -79,34 +80,16 @@ var imgEdit = [];
 var imgDelete = [];
 var divEditDelete = [];
 
-// Arrays for storing img elements for employer edit and delete operations
-var imgEmpEdit = [];
-var imgEmpDelete = [];
-var divEmpEditDelete = [];
 
 
-var updateKey, empUpdateKey;
+
+var updateKey;
 
 // Get elements
 var mainTable = <HTMLTableElement>document.getElementById("mainTable");
-var txtName = <HTMLInputElement>document.getElementById("txtName");
-var txtLastName = <HTMLInputElement>document.getElementById("txtLastName");
-var txtDate = <HTMLInputElement>document.getElementById("txtDate");
-var txtQual = <HTMLInputElement>document.getElementById("txtQual");
-
-var addEditTable = <HTMLTableElement>document.getElementById("addEditTable");
-var txtEmpName = <HTMLInputElement>document.getElementById("txtEmpName");
-var txtLocation = <HTMLInputElement>document.getElementById("txtLocation");
-var txtStartDate = <HTMLInputElement>document.getElementById("txtStartDate");
-var txtEndDate = <HTMLInputElement>document.getElementById("txtEndDate");
 
 const btnLogout = document.getElementById("btnLogout");
 var btnAddWorker = document.getElementById("btnAddWorker");
-const imgAdd = document.getElementById("imgAdd");
-var imgOkDiv = document.getElementById("imgOkDiv");
-
-var imgEmpAdd = document.getElementById("imgEmpAdd");
-var imgEmpOkDiv = document.getElementById("imgEmpOkDiv");
 
 var workers;
 // Array for storing ids of workers
@@ -143,7 +126,7 @@ function insertRows() {
     // Event fires when worker data is successfully retrieved
     workerStoreRequest.onsuccess = function (e) {
 	    var localKeys = workerStoreRequest.result;
-
+	    console.log(localKeys);
 	    // For every entry in database insert a row
 	    localKeys.forEach(function(key){
 
@@ -449,6 +432,8 @@ function updateWorkers(data) {
       		}
    		};
    	}); 
+   	// Refresh the rows with worker data
+   setTimeout(insertRows, 2000);
  }
  // Update local employer storage based od firebase
  function updateEmployers(data) {
@@ -481,7 +466,7 @@ function updateWorkers(data) {
 	      	}
    		};
     });
-    insertRows();
+    setTimeout(insertRows, 1000);
  }
 if (typeof firebase != 'undefined'){
 	btnLogout.addEventListener('click', e => {

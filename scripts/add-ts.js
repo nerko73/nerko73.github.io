@@ -1,7 +1,5 @@
 "use strict";
 exports.__esModule = true;
-// Import firebase delete after transpiling to javascript
-// It is already included in another <script> tag
 
 // Your web app's Firebase configuration
 var firebaseConfig = {
@@ -154,8 +152,9 @@ function editEmployerRecord(e) {
             alert("All fields must be filled!");
             return;
         }
-        if (!Date.parse(txtStartDate.value) || !Date.parse(txtEndDate.value)) {
-            alert("Invalid date format!");
+        console.log(moment(txtStartDate.value, 'YYYY-M-D', true).isValid());
+        if (!moment(txtStartDate.value, 'YYYY-M-D', true).isValid() || !moment(txtEndDate.value, 'YYYY-M-D', true).isValid()) {
+            alert("Invalid date format! Example: 2015-12-11");
             return;
         }
         // The following code updates the row data on the page and the arrays
@@ -271,8 +270,8 @@ imgEmpAdd.addEventListener('click', function (e) {
         alert("All fields must be filled!");
         return;
     }
-    if (!Date.parse(txtStartDate.value) || !Date.parse(txtEndDate.value)) {
-        alert("Invalid date format!");
+    if (!moment(txtStartDate.value, 'YYYY-M-D', true).isValid() || !moment(txtEndDate.value, 'YYYY-M-D', true).isValid()) {
+        alert("Invalid date format! Example: 2015-12-11");
         return;
     }
     empId.push("");
@@ -298,8 +297,8 @@ function addWorker() {
         alert("All fields must be filled!");
         return;
     }
-    if (!Date.parse(txtWorkerBirthDay.value)) {
-        alert("Invalid date format!");
+    if (!moment(txtWorkerBirthDay.value, 'YYYY-M-D', true).isValid()) {
+        alert("Invalid date format! Example: 2015-12-11");
         return;
     }
     if (updateKey == "" || updateKey == null) {
