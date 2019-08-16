@@ -49,7 +49,6 @@ import * as firebase from 'firebase';
 	  // Event fires when user logs in or out
 	  firebase.auth().onAuthStateChanged(firebaseUser =>{
 	  	if(firebaseUser){
-	  		console.log(firebaseUser);
 	  		location.href = "admin.html";
 	  	}else{
 	  		console.log("not logged in");

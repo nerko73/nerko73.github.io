@@ -111,6 +111,9 @@ function synch() {
     if (typeof firebase != 'undefined') {
         updateFirebase();
     }
+    else {
+        insertRows();
+    }
 }
 function insertRows() {
     // Deletes all rows with worker data
@@ -185,6 +188,10 @@ function insertRows() {
     };
 }
 function deleteRecord(e) {
+    //Opens confirm or cancel dialog
+    var choice = confirm("Do you with do delete worker?");
+    if (choice == false)
+        return;
     // Sets dataElement to the row in which the delete icon is located
     var dataElement = e.target.parentElement.parentElement.parentElement.parentElement;
     // Find the id of the record to be deleted
@@ -223,108 +230,22 @@ function deleteRecord(e) {
     insertRows();
 }
 function editRecord(e) {
-    addEditTable.classList.remove("d-none");
     // Sets dataElement to the previous <td> element in the same row in which the edit icon is located
     var dataElement = e.target.parentElement.parentElement.parentElement.previousElementSibling;
-    // Moves through the row and sets the input fields to the corresponding data in the row
+    var href = "addworker.html?";
+    // Moves through the row and sets the href to the corresponding data in the row
     dataElement = dataElement.previousElementSibling;
-    txtQual.value = dataElement.innerHTML;
+    href = href + "qual=" + dataElement.innerHTML + "&";
     dataElement = dataElement.previousElementSibling;
-    txtDate.value = dataElement.innerHTML;
+    href = href + "date=" + dataElement.innerHTML + "&";
     dataElement = dataElement.previousElementSibling;
-    txtLastName.value = dataElement.innerHTML;
+    href = href + "lastName=" + dataElement.innerHTML + "&";
     dataElement = dataElement.previousElementSibling;
-    txtName.value = dataElement.innerHTML;
+    href = href + "name=" + dataElement.innerHTML + "&";
     // Find the id based on the row the edit icon is located in
     updateKey = findKey(dataElement.parentElement);
-    empId = [];
-    empName = [];
-    empLocation = [];
-    empStartDate = [];
-    empEndDate = [];
-    var empTx = indexDB.transaction("EmployerStore", "readwrite");
-    employerStore = empTx.objectStore("EmployerStore");
-    var employerStoreRequest = employerStore.getAll();
-    employerStoreRequest.onsuccess = function (e) {
-        var employerKeys = employerStoreRequest.result;
-        employerKeys.forEach(function (empKey) {
-            // Find all corresponding employer ids and pushed them into arrays for manipulation
-            if (updateKey == (empKey.id).substr(0, (empKey.id).length - 1)) {
-                empId.push(empKey.id);
-                empName.push(empKey.name);
-                empLocation.push(empKey.location);
-                empStartDate.push(empKey.startDate);
-                empEndDate.push(empKey.endDate);
-            }
-        });
-        insertEmployerRows();
-    };
-    // Removes any previous <img> elements in the div
-    while (imgOkDiv.firstChild) {
-        imgOkDiv.removeChild(imgOkDiv.firstChild);
-    }
-    // Create new <img> element
-    var imgOk = document.createElement('img');
-    imgOk.src = "icons/ok.png";
-    // Event fires when imgOk is clicked on
-    imgOk.addEventListener('click', function (e) {
-        if (txtName.value == "" || txtLastName.value == "" ||
-            txtDate.value == "" || txtQual.value == "") {
-            alert("All fields must be filled!");
-            return;
-        }
-        if (!Date.parse(txtDate.value)) {
-            alert("Invalid date format!");
-            return;
-        }
-        // If firebase is defined then update the record with the updateKey id
-        // Else store the updateKey locally for later synchronization
-        if (typeof firebase != 'undefined') {
-            var updates = {};
-            var data = {
-                name: txtName.value,
-                lastName: txtLastName.value,
-                birthDay: txtDate.value,
-                qualifications: txtQual.value
-            };
-            updates['/workers/' + updateKey] = data;
-            firebase.database().ref().update(updates);
-            for (var i = 0; i < empName.length; i++) {
-                firebase.database().ref('employers/' + updateKey + i.toString()).set(({
-                    name: empName[i],
-                    location: empLocation[i],
-                    startDate: empStartDate[i],
-                    endDate: empEndDate[i]
-                }));
-            }
-        }
-        else {
-            indexTx = indexDB.transaction("AddStore", "readwrite");
-            addStore = indexTx.objectStore("AddStore");
-            addStore.put({ id: updateKey });
-        }
-        indexTx = indexDB.transaction("WorkerStore", "readwrite");
-        // Update the worker record locally
-        workerStore = indexTx.objectStore("WorkerStore");
-        workerStorePut(updateKey, txtName.value, txtLastName.value, txtDate.value, txtQual.value);
-        employerStorePut(updateKey);
-        insertRows();
-        // Remove <img> element after updating the record
-        while (imgOkDiv.firstChild) {
-            imgOkDiv.removeChild(imgOkDiv.firstChild);
-        }
-        empId = [];
-        empName = [];
-        empLocation = [];
-        empStartDate = [];
-        empEndDate = [];
-        deleteRows('employer-rows');
-        // Clears the input fields
-        txtName.value = txtLastName.value = txtDate.value = txtQual.value = "";
-        addEditTable.classList.add("d-none");
-    });
-    // Add  the ok img after click edit
-    imgOkDiv.appendChild(imgOk);
+    //Go to add worker page passing the worker data in the href
+    location.href = href + "updateKey=" + updateKey;
 }
 //Finds the key based on the row passed to it
 function findKey(elem) {
@@ -339,10 +260,6 @@ function deleteRows(className) {
     while (tableRows[0]) {
         tableRows[0].parentNode.removeChild(tableRows[0]);
     }
-}
-// Generates unique id
-function generateId() {
-    return '_' + Math.random().toString(36).substr(2, 9);
 }
 // Updates firebase based on local storage
 function updateFirebase() {
@@ -470,221 +387,15 @@ function updateEmployers(data) {
     });
     insertRows();
 }
-imgAdd.addEventListener('click', function (e) {
-    if (txtName.value == "" || txtLastName.value == "" ||
-        txtDate.value == "" || txtQual.value == "") {
-        alert("All fields must be filled!");
-        return;
-    }
-    if (!Date.parse(txtDate.value)) {
-        alert("Invalid date format!");
-        return;
-    }
-    var id = generateId();
-    // If firebase is defined then add to it
-    // Else store the id locally for later synchronization
-    if (typeof firebase != 'undefined') {
-        firebase.database().ref('workers/' + id).set(({
-            name: txtName.value,
-            lastName: txtLastName.value,
-            birthDay: txtDate.value,
-            qualifications: txtQual.value
-        }));
-        for (var i = 0; i < empName.length; i++) {
-            // Stores the employer data and adds an index to it
-            firebase.database().ref('employers/' + id + i.toString()).set(({
-                name: empName[i],
-                location: empLocation[i],
-                startDate: empStartDate[i],
-                endDate: empEndDate[i]
-            }));
-        }
-    }
-    else {
-        indexTx = indexDB.transaction("AddStore", "readwrite");
-        addStore = indexTx.objectStore("AddStore");
-        addStore.put({ id: id });
-    }
-    // Insert the data to indexedDB
-    workerStorePut(id, txtName.value, txtLastName.value, txtDate.value, txtQual.value);
-    employerStorePut(id);
-    empId = [];
-    empName = [];
-    empLocation = [];
-    empStartDate = [];
-    empEndDate = [];
-    // Clear the input fields
-    txtName.value = txtLastName.value = txtDate.value = txtQual.value = "";
-    txtEmpName.value = txtLocation.value = txtStartDate.value = txtEndDate.value = "";
-    deleteRows('employer-rows');
-    // Refresh the rows with worker data on the page
-    addEditTable.classList.add("d-none");
-    insertRows();
-});
-function insertEmployerRows() {
-    deleteRows('employer-rows');
-    for (var i = 0; i < empName.length; i++) {
-        var row = addEditTable.insertRow(3);
-        row.classList.add("text-center", "employer-rows");
-        var cell1 = row.insertCell(0);
-        var cell2 = row.insertCell(1);
-        var cell3 = row.insertCell(2);
-        var cell4 = row.insertCell(3);
-        var cell5 = row.insertCell(4);
-        cell1.innerHTML = empName[i];
-        cell2.innerHTML = empLocation[i];
-        cell3.innerHTML = empStartDate[i];
-        cell4.innerHTML = empEndDate[i];
-        /*
-       Code below creates the following dom structure
-       <div class = "d-table">
-           <div class = "d-table-cell">
-               <img src="icons/edit.png">
-           </div>
-           <div class = "d-table-cell">
-               <img src="icons/delete.png">
-           </div>
-       </div>
-       Which is appended to cell6
-       */
-        divEmpEditDelete.push(document.createElement('div'));
-        var topEmpDiv = divEmpEditDelete[divEmpEditDelete.length - 1];
-        topEmpDiv.classList.add("d-table");
-        divEmpEditDelete.push(document.createElement('div'));
-        var divEmpEdit = divEmpEditDelete[divEmpEditDelete.length - 1];
-        divEmpEdit.classList.add("d-table-cell");
-        imgEmpEdit.push(document.createElement('img'));
-        imgEmpEdit[imgEmpEdit.length - 1].src = "icons/edit.png";
-        imgEmpEdit[imgEmpEdit.length - 1].addEventListener('click', editEmployerRecord);
-        divEmpEdit.appendChild(imgEmpEdit[imgEmpEdit.length - 1]);
-        topEmpDiv.appendChild(divEmpEdit);
-        divEmpEditDelete.push(document.createElement('div'));
-        var divEmpDelete = divEmpEditDelete[divEmpEditDelete.length - 1];
-        divEmpDelete.classList.add("d-table-cell");
-        imgEmpDelete.push(document.createElement('img'));
-        imgEmpDelete[imgEmpDelete.length - 1].src = "icons/delete.png";
-        imgEmpDelete[imgEmpDelete.length - 1].addEventListener('click', deleteEmployerRecord);
-        divEmpDelete.appendChild(imgEmpDelete[imgEmpDelete.length - 1]);
-        topEmpDiv.appendChild(divEmpDelete);
-        cell5.appendChild(topEmpDiv);
-    }
-}
-// Finds employer index
-function findEmpKey(elem) {
-    var i = 0;
-    while ((elem = elem.nextSibling) != null)
-        i++;
-    i -= 2;
-    return i;
-}
-function editEmployerRecord(e) {
-    console.log("edit employer");
-    // Sets dataElement to the previous <td> element in the same row in which the edit icon is located
-    var dataElement = e.target.parentElement.parentElement.parentElement.previousElementSibling;
-    txtEndDate.value = dataElement.innerHTML;
-    // Moves through the row and sets the input fields to the corresponding data in the row
-    dataElement = dataElement.previousElementSibling;
-    txtStartDate.value = dataElement.innerHTML;
-    dataElement = dataElement.previousElementSibling;
-    txtLocation.value = dataElement.innerHTML;
-    dataElement = dataElement.previousElementSibling;
-    txtEmpName.value = dataElement.innerHTML;
-    // Find the id based on the row the edit icon is located in
-    empUpdateKey = findEmpKey(dataElement.parentElement);
-    // Removes any previous <img> elements in the div
-    while (imgEmpOkDiv.firstChild) {
-        imgEmpOkDiv.removeChild(imgEmpOkDiv.firstChild);
-    }
-    // Create new <img> element
-    var imgEmpOk = document.createElement('img');
-    imgEmpOk.src = "icons/ok.png";
-    // Event fires when imgEmpOk is clicked on
-    imgEmpOk.addEventListener('click', function (e) {
-        if (txtEmpName.value == "" || txtLocation.value == "" ||
-            txtStartDate.value == "" || txtEndDate.value == "") {
-            alert("All fields must be filled!");
-            return;
-        }
-        if (!Date.parse(txtStartDate.value) || !Date.parse(txtEndDate.value)) {
-            alert("Invalid date format!");
-            return;
-        }
-        // The following code updates the row data on the page and the arrays
-        empName[empUpdateKey] = txtEmpName.value;
-        dataElement.innerHTML = txtEmpName.value;
-        dataElement = dataElement.nextElementSibling;
-        empLocation[empUpdateKey] = txtLocation.value;
-        dataElement.innerHTML = txtLocation.value;
-        dataElement = dataElement.nextElementSibling;
-        empStartDate[empUpdateKey] = txtStartDate.value;
-        dataElement.innerHTML = txtStartDate.value;
-        dataElement = dataElement.nextElementSibling;
-        empEndDate[empUpdateKey] = txtEndDate.value;
-        dataElement.innerHTML = txtEndDate.value;
-        dataElement = dataElement.nextElementSibling;
-        // Remove <img> element after updating the record
-        while (imgEmpOkDiv.firstChild) {
-            imgEmpOkDiv.removeChild(imgEmpOkDiv.firstChild);
-        }
-        // Clears the input fields
-        txtEmpName.value = txtLocation.value = txtStartDate.value = txtEndDate.value = "";
-    });
-    // Add  the ok img after click edit
-    imgEmpOkDiv.appendChild(imgEmpOk);
-}
-function deleteEmployerRecord(e) {
-    var dataElement = e.target.parentElement.parentElement.parentElement.parentElement;
-    var empDeleteKey = findEmpKey(dataElement);
-    dataElement.parentElement.removeChild(dataElement);
-    // If firebase is defined then delete the record with the empDeleteKey id
-    // Else store the empDeleteKey locally for later synchronization
-    if (typeof firebase != 'undefined') {
-        firebase.database().ref("employers/" + empId[empDeleteKey]).remove();
-    }
-    else {
-        indexTx = indexDB.transaction("EmpRemoveStore", "readwrite");
-        empRemoveStore = indexTx.objectStore("EmpRemoveStore");
-        empRemoveStore.put({ id: empId[empDeleteKey] });
-    }
-    indexTx = indexDB.transaction("EmployerStore", "readwrite");
-    employerStore = indexTx.objectStore("EmployerStore");
-    // Delete the locally stored record
-    employerStore["delete"](empId[empDeleteKey]);
-    console.log(empName);
-    empId.splice(empDeleteKey, 1);
-    empName.splice(empDeleteKey, 1);
-    empLocation.splice(empDeleteKey, 1);
-    empStartDate.splice(empDeleteKey, 1);
-    empEndDate.splice(empDeleteKey, 1);
-    console.log(empName);
-    // Refresh the rows with employer data on the page
-    insertEmployerRows();
-}
-// Pushed employer data into arrays
-imgEmpAdd.addEventListener('click', function (e) {
-    if (txtEmpName.value == "" || txtLocation.value == "" ||
-        txtStartDate.value == "" || txtEndDate.value == "") {
-        alert("All fields must be filled!");
-        return;
-    }
-    if (!Date.parse(txtStartDate.value) || !Date.parse(txtEndDate.value)) {
-        alert("Invalid date format!");
-        return;
-    }
-    empId.push("");
-    empName.push(txtEmpName.value);
-    empLocation.push(txtLocation.value);
-    empStartDate.push(txtStartDate.value);
-    empEndDate.push(txtEndDate.value);
-    insertEmployerRows();
-    txtEmpName.value = txtLocation.value = txtStartDate.value = txtEndDate.value = "";
-});
 if (typeof firebase != 'undefined') {
     btnLogout.addEventListener('click', function (e) {
         firebase.auth().signOut();
         location.href = "index.html";
     });
 }
+btnAddWorker.addEventListener('click', function (e) {
+    location.href = "addworker.html";
+});
 // Add a record to the database
 function workerStorePut(id, name, lastName, birthDay, qual) {
     indexTx = indexDB.transaction("WorkerStore", "readwrite");
@@ -697,6 +408,7 @@ function workerStorePut(id, name, lastName, birthDay, qual) {
         qualifications: qual
     });
 }
+// Add a record of employer to database
 function employerStorePut(id) {
     indexTx = indexDB.transaction("EmployerStore", "readwrite");
     employerStore = indexTx.objectStore("EmployerStore");
@@ -710,6 +422,22 @@ function employerStorePut(id) {
         });
     }
 }
-btnAddWorker.addEventListener('click', function (e) {
-    addEditTable.classList.remove("d-none");
+window.addEventListener('online', function (e) {
+    alert("Established connection. Your data will be synchronized with firebase. You will be redirected to the login page if needed.");
+    if (typeof firebase == 'undefined') {
+        alert("Please login to synchronize with firebase.");
+        location.href = "index.html";
+    }
+    else {
+        // Event fires when user logs in or out
+        firebase.auth().onAuthStateChanged(function (firebaseUser) {
+            if (!firebaseUser) {
+                alert("Please login to synchronize with firebase.");
+                location.href = "index.html";
+            }
+        });
+    }
+});
+window.addEventListener('offline', function (e) {
+    alert("Connection lost. Your data will be stored locally and synchronized with firebase upon reestablishing connection.");
 });
