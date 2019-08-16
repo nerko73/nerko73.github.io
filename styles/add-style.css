@@ -2,16 +2,12 @@ body{
 	font-family: Arial, Helvetica, sans-serif;
 	background-color: #F7F7F7;
 }
-table{
-	width: 100%;
-}
 #navBar{
-	
 	padding: 20px;
 }
-.d-table{
-	margin: 0 auto;
-}
-#btnAddWorker{
+#btnIndex, #btnAddWorker{
 	margin-right: 10px;
+}
+#addEditTable{
+	margin-top: 20px;
 }

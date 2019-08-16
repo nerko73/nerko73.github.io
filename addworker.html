@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap stylesheet -->
+	<link rel="stylesheet" href="bootstrap/css/bootstrap.css">
+
+	<link rel="stylesheet" type="text/css" href="styles/add-style.css">
+
+	<title>Add Worker</title>
+</head>
+<body>
+	<div id="navBar">
+		<h2 id="h2" class="d-inline h2">
+			Worker Administration
+		</h2>
+		<input class="btn float-right" type="submit" id="btnLogout" value="Log out">
+		<input class="btn float-right" type="submit" id="btnIndex" value="View Workers" onclick = "viewWorkers()">
+		<input class="btn btn-primary float-right" type="submit" id="btnAddWorker" value="Add Worker" onclick="addWorker()">
+	</div>
+	<div id="alertSuc" class="alert alert-success text-center d-none">
+    	<strong>Success</strong> Worker inserted into database.
+    </div>
+	<div class="container">
+		<div class="row">
+			<div class="col-6">
+				<label for="txtWorkerName">Worker Name</label>
+				<input id="txtWorkerName" class="form-control">
+				<label for="txtWorkerLastName">Worker Last Name</label>
+				<input id="txtWorkerLastName" class="form-control">
+			</div>
+			<div class="col-6">
+				<label for="txtWorkerBirthDay">Worker Birth Day</label>
+				<input id="txtWorkerBirthDay" class="form-control">
+				<label for="txtWorkerQual">Worker Qualifications</label>
+				<input id="txtWorkerQual" class="form-control">
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-12">
+				<table id="addEditTable" class="table table-hover table-condensed">
+					<thead>
+						<tr class="w-100 text-center">
+							<th>
+								Company Name
+							</th>
+							<th>
+								Location
+							</th>
+							<th>
+								Start Date
+							</th>
+							<th>
+								End Date
+							</th>
+							<th >
+								Add/Edit
+							</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>
+								<input id="txtEmpName" class="form-control">
+							</td>
+							<td>
+								<input id="txtLocation" class="form-control">
+							</td>
+							<td>
+								<input id="txtStartDate" class="form-control">
+							</td>
+							<td>
+								<input id="txtEndDate" class="form-control">
+							</td>
+							<td id="iconEmpCell">
+								<div class="d-table">
+									<div class="d-table-cell">
+										<img src="icons/add.png" id="imgEmpAdd">
+									</div>
+									<div id="imgEmpOkDiv"class="d-table">
+										
+									</div>
+								</div>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+
+	<!-- jquery javascript -->
+	<script src="scripts/jquery.js"></script>
+	
+	<!-- Bootstrap javascript-->
+	<script src="bootstrap/js/bootstrap.bundle.min.js"></script>
+
+	<!-- The core Firebase JS SDK is always required and must be listed first -->
+	<script src="https://www.gstatic.com/firebasejs/6.3.0/firebase-app.js"></script>
+	
+	<!-- Firebase authentication -->
+	<script src="https://www.gstatic.com/firebasejs/6.3.0/firebase-auth.js"></script>
+
+	<!-- Firebase database -->
+	<script src="https://www.gstatic.com/firebasejs/6.3.0/firebase-database.js"></script>
+
+	<script>var exports = {};</script>
+	<script type="text/javascript" src="scripts/add-ts.js"></script>
+</body>
+</html>
