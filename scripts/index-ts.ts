@@ -16,7 +16,7 @@ import * as firebase from 'firebase';
 
   const btnOffline = document.getElementById("btnOffline");
   	// If firebase is defined (connection is established) then initialize it
-	if (typeof firebase != 'undefined'){
+	 if (typeof firebase != 'undefined' && window.navigator.onLine == true){
 	  // Initialize Firebase
 	  firebase.initializeApp(firebaseConfig);
 
