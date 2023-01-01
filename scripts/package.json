@@ -7,7 +7,7 @@
     "firebase": "^6.3.0",
     "moment": "^2.24.0",
     "typescript-dotnet-commonjs": "^4.11.2",
-    "webpack": "^4.35.3"
+    "webpack": "^5.75.0"
   },
   "devDependencies": {},
   "scripts": {
